@@ -2,7 +2,7 @@ name: CD
 
 on:
   push:
-    branches: [master]
+    # branches: [master]
     tags:
       - "*"
 
@@ -17,9 +17,8 @@ jobs:
     steps:
       - name: Get version
         uses: actions/checkout@master
-        # id: get_version
-        # run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
-
+        id: get_version
+        run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
       # - name: Download nginx-upload-module
       #   uses: actions/checkout@master
       #   with:
@@ -59,10 +58,12 @@ jobs:
         id: shasum
         run: |
           echo ::set-output name=sha::"$(shasum -a 256 ./release/kc-nginx.tar.gz | awk '{printf $1}')"
+
       - name: Extract release notes
         if: matrix.os == 'ubuntu-latest'
         id: release_notes
         uses: ffurrer2/extract-release-notes@v1
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
