@@ -20,32 +20,32 @@ jobs:
       #   id: get_version
       #   run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
 
-      - name: Download nginx-upload-module
-        uses: actions/checkout@master
-        with:
-          repository: vkholodkov/nginx-upload-module
+      # - name: Download nginx-upload-module
+      #   uses: actions/checkout@master
+      #   with:
+      #     repository: vkholodkov/nginx-upload-module
 
       - name: Show working directory
         run: ls -al
 
       - name: Extract all packages
-        run: ls *.gz |xargs -n1 tar -xzf
+        run: ls *.gz | xargs -n1 tar -xzf && ls *.zip | xargs -n1 unzip
 
       - name: Show working directory
         run: ls -al
 
       - name: Configure
-        run: ./configure \
-          --sbin-path=/usr/local/nginx/nginx \
-          --conf-path=/usr/local/nginx/nginx.conf \
-          --pid-path=/usr/local/nginx/nginx.pid \
-          --with-http_ssl_module \
-          --with-http_v2_module \
-          --with-http_xslt_module \
-          --with-pcre=../pcre-8.44 \
-          --with-zlib=../zlib-1.2.11 \
-          --with-openssl=../openssl-OpenSSL_1_1_1k \
-          --add-module=../njs-d25d92370bfd/nginx \
+        run: ./configure
+          --sbin-path=/usr/local/nginx/nginx
+          --conf-path=/usr/local/nginx/nginx.conf
+          --pid-path=/usr/local/nginx/nginx.pid
+          --with-http_ssl_module
+          --with-http_v2_module
+          --with-http_xslt_module
+          --with-pcre=../pcre-8.44
+          --with-zlib=../zlib-1.2.11
+          --with-openssl=../openssl-OpenSSL_1_1_1k
+          --add-module=../njs-d25d92370bfd/nginx
           --add-module=../nginx-upload-module-master
 
       - name: Build
