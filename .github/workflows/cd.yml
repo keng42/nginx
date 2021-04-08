@@ -49,7 +49,7 @@ jobs:
           --add-module=../nginx-upload-module-master
 
       - name: Build
-        run: make build
+        run: cd nginx-1.19.9 && make build
 
       - name: Package
         run: mkdir -p ./release && tar -zcvf ./release/kc-nginx.tar.gz nginx-1.19.9/objs
