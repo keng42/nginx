@@ -2,6 +2,7 @@ name: CD
 
 on:
   push:
+    branches: [master]
     tags:
       - "*"
 
@@ -14,10 +15,10 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Get version
-        uses: actions/checkout@master
-        id: get_version
-        run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
+      # - name: Get version
+      #   uses: actions/checkout@master
+      #   id: get_version
+      #   run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
 
       - name: Download nginx-upload-module
         uses: actions/checkout@master
