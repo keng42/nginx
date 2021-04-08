@@ -23,13 +23,13 @@ jobs:
       - name: Download nginx-upload-module
         uses: actions/checkout@master
         with:
-          name: vkholodkov/nginx-upload-module
+          repository: vkholodkov/nginx-upload-module
 
       - name: Show working directory
         run: ls -al
 
       - name: Extract all packages
-        run: tar -zxvf *.tar.gz
+        run: ls *.gz |xargs -n1 tar -xzf
 
       - name: Show working directory
         run: ls -al
