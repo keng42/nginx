@@ -15,8 +15,9 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
+      - uses: actions/checkout@master
+
       - name: Get version
-        uses: actions/checkout@master
         id: get_version
         run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
       # - name: Download nginx-upload-module
