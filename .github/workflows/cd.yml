@@ -22,7 +22,7 @@ jobs:
       #   run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
 
       - name: Show working directory
-        run: ls -al && echo kc-nginx-${matrix.os}.tar.gz
+        run: ls -al && echo kc-nginx-`uname`.tar.gz && echo kc-nginx-`motrix.os`.tar.gz
 
       # - name: Extract all packages
       #   run: ls *.gz | xargs -n1 tar -xzf && ls *.zip | xargs -n1 unzip
