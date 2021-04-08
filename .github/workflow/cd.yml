@@ -1,0 +1,74 @@
+name: CD
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  release:
+    strategy:
+      matrix:
+        # os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [macos-latest]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Get version
+        uses: actions/checkout@master
+        id: get_version
+        run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
+
+      - name: Download nginx-upload-module
+        uses: actions/checkout@master
+        with:
+          name: vkholodkov/nginx-upload-module
+
+      - name: Show working directory
+        run: ls -al
+
+      - name: Extract all packages
+        run: tar -zxvf *.tar.gz
+
+      - name: Show working directory
+        run: ls -al
+
+      - name: Configure
+        run: ./configure \
+          --sbin-path=/usr/local/nginx/nginx \
+          --conf-path=/usr/local/nginx/nginx.conf \
+          --pid-path=/usr/local/nginx/nginx.pid \
+          --with-http_ssl_module \
+          --with-http_v2_module \
+          --with-http_xslt_module \
+          --with-pcre=../pcre-8.44 \
+          --with-zlib=../zlib-1.2.11 \
+          --with-openssl=../openssl-OpenSSL_1_1_1k \
+          --add-module=../njs-d25d92370bfd/nginx \
+          --add-module=../nginx-upload-module-master
+
+      - name: Build
+        run: make build
+
+      - name: Package
+        run: mkdir -p ./release && tar -zcvf ./release/kc-nginx.tar.gz nginx-1.19.9/objs
+
+      - name: Set SHA
+        if: matrix.os == 'macos-latest'
+        id: shasum
+        run: |
+          echo ::set-output name=sha::"$(shasum -a 256 ./release/kc-nginx.tar.gz | awk '{printf $1}')"
+      - name: Extract release notes
+        if: matrix.os == 'ubuntu-latest'
+        id: release_notes
+        uses: ffurrer2/extract-release-notes@v1
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body: ${{ steps.release_notes.outputs.release_notes }}
+          prerelease: false
+          files: |
+            ./release/*.tar.gz
+            ./release/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
