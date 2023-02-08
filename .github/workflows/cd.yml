@@ -25,7 +25,7 @@ jobs:
         run: ls -al
 
       - name: Extract all packages
-        run: ls *.gz | xargs -n1 tar -xzf && ls *.xz | xargs -n1 tar -xzf && ls *.zip | xargs -n1 unzip
+        run: ls *.gz | xargs -n1 tar -xzf && ls *.zip | xargs -n1 unzip
 
       - name: Show working directory
         run: ls -al
