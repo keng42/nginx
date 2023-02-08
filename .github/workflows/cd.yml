@@ -31,23 +31,24 @@ jobs:
         run: ls -al
 
       - name: Configure
-        run: cd nginx-1.19.9 && ./configure
+        run: cd nginx-1.22.1 && ./configure
           --sbin-path=/usr/local/nginx/nginx
           --conf-path=/usr/local/nginx/nginx.conf
           --pid-path=/usr/local/nginx/nginx.pid
-          --with-http_ssl_module
           --with-http_v2_module
-          --with-pcre=../pcre-8.44
-          --with-zlib=../zlib-1.2.11
+          --with-http_ssl_module
+          --with-http_ssl_preread_module
+          --with-pcre=../pcre2-10.42
+          --with-zlib=../zlib-1.2.13
           --with-openssl=../openssl-OpenSSL_1_1_1k
           --add-module=../njs-d25d92370bfd/nginx
           --add-module=../nginx-upload-module-master
 
       - name: Build
-        run: cd nginx-1.19.9 && make build
+        run: cd nginx-1.22.1 && make build
 
       - name: Package
-        run: mkdir -p ./release && tar -zcvf ./release/kc-nginx-`uname`.tar.gz nginx-1.19.9/objs
+        run: mkdir -p ./release && tar -zcvf ./release/kc-nginx-`uname`.tar.gz nginx-1.22.1/objs
 
       - name: Set SHA
         if: matrix.os == 'macos-latest'
